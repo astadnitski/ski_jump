@@ -20,8 +20,8 @@ The detailed instructions are listed in the `instructions` directory:
 
 Enforcing code programming:
 
-`$ cd topi-git-template`
-`$ . env/bin/activate`
-`$ pip install black`
-`$ pip install pre-commit`
-`$ pre-commit install`
+0. `$ cd topi-git-template`
+0. `$ . env/bin/activate`
+0. `$ pip install black`
+0. `$ pip install pre-commit`
+0. `$ pre-commit install`
