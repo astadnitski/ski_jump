@@ -18,10 +18,18 @@ The detailed instructions are listed in the `instructions` directory:
 
 ## Exercise A
 
-Enforcing code programming:
+How to sync:
+
+0. `$ git switch main`
+1. `$ git pull`
+2. `$ git switch your_branch`
+3. `$ git merge main`
+4. `$ git push`
+
+Enforcing code formatting:
 
 0. `$ cd topi-git-template`
-0. `$ . env/bin/activate`
-0. `$ pip install black`
-0. `$ pip install pre-commit`
-0. `$ pre-commit install`
+1. `$ . env/bin/activate`
+2. `$ pip install black`
+3. `$ pip install pre-commit`
+4. `$ pre-commit install`
