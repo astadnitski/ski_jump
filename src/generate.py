@@ -4,6 +4,7 @@ import argparse
 from dataclasses import dataclass
 import pathlib
 import numpy as np
+import json
 
 EARTH_GRAVITY = 1.0  # [a.u.]
 """Acceleration on earth due to gravity."""
@@ -34,6 +35,7 @@ class Hill:
     """Vertical offset of slope - should be negative."""
     slope: float
     """Slope of the hill - should be negative."""
+    
 
     def y(self, x: float) -> float:
         """Returns shape of the hill."""
@@ -52,11 +54,14 @@ class SkiJump:
     """Initial velocity."""
     alpha: float  # [rad]
     """Initial angle."""
+    g = 1.0
+    """Gravitational acceleration"""
 
     def y(self, x: float) -> float:
         """Return the trajectory."""
         # Work here in Step 1!
-        raise NotImplementedError()
+        return np.tan(self.alpha) * x - self.g / (2 * self.v0**2 * np.cos(self.alpha)**2) * x**2
+        # raise NotImplementedError()
 
     @staticmethod
     # ↑ this is the `staticmethod` decorator, whose documentation can be found
@@ -69,12 +74,17 @@ class SkiJump:
         # Create a `SkiJump` object with the specification given in the file.
         # The `dataclass` decorator adds, e.g., a constructor with keyword arguments,
         # as is used above for creating the `Hill` object.
-        raise NotImplementedError()
+        with open(path) as file:
+            input = json.load(file)
+        return SkiJump(v0=input["v0"], alpha=input["alpha"])
+        # raise NotImplementedError()
 
     def landing(self, hill: Hill) -> float:
         """Returns the intersection of the trajectory and the hill."""
         # Work here in Step 1!
-        raise NotImplementedError()
+        return (self.v0**2 * np.cos(self.alpha)**2) * (np.tan(self.alpha) - hill.slope 
+                + np.sqrt((hill.slope - np.tan(self.alpha))**2 - 2 * self.g * hill.offset/(self.v0**2 * np.cos(self.alpha)**2)))/self.g
+        # raise NotImplementedError()
 
     def sample(self, hill: Hill, n: int) -> tuple[np.ndarray, np.ndarray]:
         """Discretize trajectory with `n` points until the landing.
@@ -95,11 +105,12 @@ class SkiJump:
         """
         # Work here in Step 3!
         # 1. Compute the landing point
+        land = self.landing(hill)
         # 2. Generate `n` equally space x points between the landing point and 0. using
         #    [`numpy.linspace`](https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy-linspace)
-        xs = np.array([])
+        xs = np.linspace(0, land, n)
         # 3. Compute the trajectory for each x point
-        ys = np.array([])
+        ys = np.array([self.y(x) for x in xs])
         return xs, ys
 
 
@@ -123,3 +134,5 @@ if __name__ == "__main__":
     # 3. Dump the x points and the y points into the file `args.output` using
     #    [`numpy.savetxt`](https://numpy.org/doc/stable/reference/generated/numpy.savetxt.html#numpy-savetxt).
     #    Make x the first column and y the second column.
+    my_data = np.array([my_xs, my_ys])
+    np.savetxt(args.output, my_data)
