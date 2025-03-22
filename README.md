@@ -15,3 +15,13 @@ The detailed instructions are listed in the `instructions` directory:
 0. [Exercise A: Basic Fitting](./instructions/3-Exercise-A.md)
 0. [Exercise B: Non-trivial Fitting](./instructions/4-Exercise-B.md)
 0. [Exercise C: Getting more advanced](./instructions/5-Exercise-C.md)
+
+## Exercise A
+
+Enforcing code programming:
+
+0. `$ cd topi-git-template`
+0. `$ . env/bin/activate`
+0. `$ pip install black`
+0. `$ pip install pre-commit`
+0. `$ pre-commit install`
