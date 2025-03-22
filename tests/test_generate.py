@@ -32,7 +32,7 @@ class TestSkiJump:
     # Pytest offers a built-in method to temporarily deactivate test:
     # https://docs.pytest.org/en/stable/how-to/skipping.html#skipping-test-functions
     # ↓ When you start working on `SkiJump.y` remove the line below ↓ (and similar)
-    @pytest.mark.skip(reason="Not implemented yet.")
+    # @pytest.mark.skip(reason="Not implemented yet.")
     # ↑ When you start working on `SkiJump.y` remove the line above ↑ (and similar)
     def test_y(self):
         """Check trajectory."""
@@ -40,15 +40,15 @@ class TestSkiJump:
         # Adjust the implementation of SkiJump.y such that these test pass.
         # First a "simple" example
         jump_straight = SkiJump(v0=np.sqrt(0.5), alpha=0.0)
-        np.testing.assert_allclose(jump_straight.y(0.0), 0.0)
+        np.testing.assert_allclose(jump_straight.y(0.0), 0.0, atol=1e-15)
         np.testing.assert_allclose(jump_straight.y(1.0), -1.0)
         np.testing.assert_allclose(jump_straight.y(2.0), -4.0)
         # Then a "not-so-simple" example
         jump_up = SkiJump(v0=1.0, alpha=np.pi / 4.0)
         np.testing.assert_allclose(jump_up.y(0.5), 0.25)
-        np.testing.assert_allclose(jump_up.y(1.0), 0.0)
+        np.testing.assert_allclose(jump_up.y(1.0), 0.0, atol=1e-15)
 
-    @pytest.mark.skip(reason="Not implemented yet.")
+    # @pytest.mark.skip(reason="Not implemented yet.")
     def test_from_json_file(self, tmp_path):
         """Check file config."""
         # Work here in Step 2!
@@ -67,10 +67,33 @@ class TestSkiJump:
         np.testing.assert_allclose(jump.alpha, alpha)
         np.testing.assert_allclose(jump.v0, v0)
 
-    @pytest.mark.skip(reason="Not implemented yet.")
+    # @pytest.mark.skip(reason="Not implemented yet.")
     def test_landing(self):
         """Check landing point."""
         # Work here in Step 2!
         # Design your own test for `SkiJump.landing`!
         # Setup a controlled environment and check against numbers, which you know are correct.
         # If the numbers are non-trivial to obtain, it is a good idea to give a reference.
+        # Jump straight and flat hill
+        jump_straight = SkiJump(v0=np.sqrt(0.5), alpha=0.0)
+        hill = Hill(offset=0.0, slope=0.0)
+        land = jump_straight.landing(hill)
+        np.testing.assert_allclose(land, 0.0, atol=1e-15)
+        hill = Hill(offset=-1.0, slope=0.0)
+        land = jump_straight.landing(hill)
+        np.testing.assert_allclose(land, 1.0)
+        hill = Hill(offset=-4.0, slope=0.0)
+        land = jump_straight.landing(hill)
+        np.testing.assert_allclose(land, 2.0)
+        #Jump vertically
+        hill = Hill(offset=-1.0, slope=-1.0)
+        jump_up = SkiJump(v0=1.0, alpha=np.pi / 2.0)
+        land = jump_up.landing(hill)
+        np.testing.assert_allclose(land, 0.0, atol=1e-10)
+        jump_up = SkiJump(v0=3.0, alpha=np.pi / 2.0)
+        land = jump_up.landing(hill)
+        np.testing.assert_allclose(land, 0.0, atol=1e-10)
+        jump_up = SkiJump(v0=10.0, alpha=np.pi / 2.0)
+        land = jump_up.landing(hill)
+        np.testing.assert_allclose(land, 0.0, atol=1e-10)
+
